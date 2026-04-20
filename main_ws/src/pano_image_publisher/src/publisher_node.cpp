@@ -33,11 +33,11 @@ namespace pano_image_publisher {
   }
 
   void PublisherNode::load_parameters() {
-    this->get_parameter("folder_path", folder_path_);
-    this->get_parameter("topic_name", topic_name_);
-    this->get_parameter("publish_rate_in_hz", publish_rate_in_hz_);
-    this->get_parameter("loop", loop_);
-    this->get_parameter("shuffle", shuffle_);
+    this->get_parameter("folder_path"         , this->folder_path_);
+    this->get_parameter("topic_name"          , this->topic_name_);
+    this->get_parameter("publish_rate_in_hz"  , this->publish_rate_in_hz_);
+    this->get_parameter("loop"                , this->loop_);
+    this->get_parameter("shuffle"             , this->shuffle_);
 
     RCLCPP_INFO(
       this->get_logger(), 
@@ -49,7 +49,7 @@ namespace pano_image_publisher {
     auto period_ms = std::chrono::milliseconds(1000 / this->publish_rate_in_hz_);
 
     // Create a timer that calls the publish_image method at the specified rate
-    timer_ = this->create_wall_timer(
+    this->timer_ = this->create_wall_timer(
       period_ms,
       std::bind(&PublisherNode::publish_image, this)
     );
