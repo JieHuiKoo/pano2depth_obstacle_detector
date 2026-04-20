@@ -58,12 +58,13 @@ namespace pano_image_publisher {
   }
 
   void PublisherNode::publish_image() {
-    RCLCPP_INFO(this->get_logger(), "Publishing image!");
-
+    
     if (this->images_.empty()) {
       RCLCPP_WARN(this->get_logger(), "No images to publish.");
       return;
     }
+    
+    RCLCPP_INFO(this->get_logger(), "Publishing image!");
 
     // Get the current image
     const cv::Mat& image = this->images_[this->current_image_idx_];
