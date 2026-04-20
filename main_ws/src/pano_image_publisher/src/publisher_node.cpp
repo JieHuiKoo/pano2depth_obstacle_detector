@@ -12,6 +12,8 @@ namespace pano_image_publisher {
     // Load the parameters
     this->load_parameters();
 
+    // Start the timer to publish images at the specified rate
+    this->start_timer();
   }
 
   void PublisherNode::declare_parameters() {
@@ -25,13 +27,30 @@ namespace pano_image_publisher {
   void PublisherNode::load_parameters() {
     this->get_parameter("folder_path", folder_path_);
     this->get_parameter("topic_name", topic_name_);
-    this->get_parameter("publish_rate", publish_rate_in_hz_);
+    this->get_parameter("publish_rate_in_hz", publish_rate_in_hz_);
     this->get_parameter("loop", loop_);
     this->get_parameter("shuffle", shuffle_);
 
     RCLCPP_INFO(
       this->get_logger(), 
-      "\n=== Parameters loaded ===\nfolder_path=%s\ntopic_name=%s\npublish_rate=%d\nloop=%s\nshuffle=%s\n========================",
+      "\n=== Parameters loaded ===\nfolder_path=%s\ntopic_name=%s\npublish_rate_in_hz=%d\nloop=%s\nshuffle=%s\n========================",
                 folder_path_.c_str(), topic_name_.c_str(), publish_rate_in_hz_, loop_ ? "true" : "false", shuffle_ ? "true" : "false");
+  }
+
+  void PublisherNode::start_timer() {
+    auto period_ms = std::chrono::milliseconds(1000 / this->publish_rate_in_hz_);
+
+    // Create a timer that calls the publish_image method at the specified rate
+    timer_ = this->create_wall_timer(
+      period_ms,
+      std::bind(&PublisherNode::publish_image, this)
+    );
+
+    RCLCPP_INFO(this->get_logger(), "Timer started with a period of %ld ms.", period_ms.count());
+  }
+
+  void PublisherNode::publish_image() {
+    // TODO: Implement logic for publishing
+    RCLCPP_INFO(this->get_logger(), "Publishing image!");
   }
 } // namespace pano_image_publisher

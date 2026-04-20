@@ -16,6 +16,8 @@ private:
   // Methods
   void declare_parameters();
   void load_parameters();
+  void start_timer();
+  void publish_image();
   
   // Params
   std::string folder_path_;
@@ -23,6 +25,9 @@ private:
   int publish_rate_in_hz_;
   bool loop_;
   bool shuffle_;
+
+  // Timer
+  rclcpp::TimerBase::SharedPtr timer_;
 };
 
 } // namespace pano_image_publisher
