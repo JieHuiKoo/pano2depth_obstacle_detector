@@ -19,6 +19,8 @@ include_directories(
 add_executable(pano_image_publisher_node
   src/main.cpp  
   src/publisher_node.cpp
+  src/image_loader.cpp
+  src/utils.cpp
 )
 
 ament_target_dependencies(pano_image_publisher_node

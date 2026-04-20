@@ -2,7 +2,9 @@
 
 namespace pano_image_publisher {
 
-  PublisherNode::PublisherNode() : Node("pano_image_publisher_node") {
+  PublisherNode::PublisherNode()
+  : Node("pano_image_publisher_node"),
+  image_loader_(this->get_logger()) {
       
     RCLCPP_INFO(this->get_logger(), "Node started.");
 
@@ -11,6 +13,9 @@ namespace pano_image_publisher {
 
     // Load the parameters
     this->load_parameters();
+
+    // Load the images
+    this->load_images();
 
     // Start the timer to publish images at the specified rate
     this->start_timer();
@@ -52,5 +57,17 @@ namespace pano_image_publisher {
   void PublisherNode::publish_image() {
     // TODO: Implement logic for publishing
     RCLCPP_INFO(this->get_logger(), "Publishing image!");
+  void PublisherNode::load_images() {
+    this->images_ = this->image_loader_.load_images(this->folder_path_);
+    if (this->images_.empty()) {
+      RCLCPP_WARN(this->get_logger(), "No images loaded from folder: %s", this->folder_path_.c_str());
+    } else {
+      RCLCPP_INFO(this->get_logger(), "Loaded %zu images from folder: %s", this->images_.size(), this->folder_path_.c_str());
+    }
+  }
+
+  void PublisherNode::create_publisher() {
+    this->publisher_ = this->create_publisher<sensor_msgs::msg::Image>(this->topic_name_, 10);
+    RCLCPP_INFO(this->get_logger(), "Publisher created on topic: %s", this->topic_name_.c_str());
   }
 } // namespace pano_image_publisher

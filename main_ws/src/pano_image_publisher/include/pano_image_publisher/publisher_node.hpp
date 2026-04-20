@@ -4,6 +4,9 @@
 #include <sensor_msgs/msg/image.hpp>                // ROS2 message type for images
 #include <opencv2/opencv.hpp>                       // OpenCV for image processing
 
+#include "pano_image_publisher/image_loader.hpp"    // Custom image loader class
+#include "pano_image_publisher/utils.hpp"           // Utility functions
+
 namespace pano_image_publisher {
 
 class PublisherNode : public rclcpp::Node {
@@ -18,6 +21,7 @@ private:
   void load_parameters();
   void start_timer();
   void publish_image();
+  void load_images();
   
   // Params
   std::string folder_path_;
@@ -28,6 +32,10 @@ private:
 
   // Timer
   rclcpp::TimerBase::SharedPtr timer_;
+  // Image Variables
+  std::vector<cv::Mat> images_;
+  size_t current_image_idx_ = 0;
+  ImageLoader image_loader_;
 };
 
 } // namespace pano_image_publisher
