@@ -18,7 +18,7 @@ namespace pano_image_publisher {
     this->load_images();
 
     // Create the publisher
-    this->create_publisher();
+    this->setup_publisher();
 
     // Start the timer to publish images at the specified rate
     this->start_timer();
@@ -99,7 +99,7 @@ namespace pano_image_publisher {
     }
   }
 
-  void PublisherNode::create_publisher() {
+  void PublisherNode::setup_publisher() {
     this->publisher_ = this->create_publisher<sensor_msgs::msg::Image>(this->topic_name_, 10);
     RCLCPP_INFO(this->get_logger(), "Publisher created on topic: %s", this->topic_name_.c_str());
   }

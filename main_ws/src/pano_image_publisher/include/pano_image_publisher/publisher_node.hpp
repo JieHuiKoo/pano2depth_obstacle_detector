@@ -22,7 +22,7 @@ private:
   void start_timer();
   void publish_image();
   void load_images();
-  void create_publisher();
+  void setup_publisher();
 
   
   // Params
