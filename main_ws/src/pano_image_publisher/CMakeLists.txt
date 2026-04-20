@@ -7,9 +7,33 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(OpenCV REQUIRED)
+
+include_directories(
+  include
+  ${OpenCV_INCLUDE_DIRS}
+)
+
+add_executable(pano_image_publisher_node
+  src/main.cpp  
+  src/publisher_node.cpp
+)
+
+ament_target_dependencies(pano_image_publisher_node
+  rclcpp
+  sensor_msgs
+  OpenCV
+)
+
+install (TARGETS pano_image_publisher_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install (DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION include/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
