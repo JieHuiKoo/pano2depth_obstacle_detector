@@ -22,6 +22,8 @@ private:
   void start_timer();
   void publish_image();
   void load_images();
+  void create_publisher();
+
   
   // Params
   std::string folder_path_;
@@ -32,6 +34,10 @@ private:
 
   // Timer
   rclcpp::TimerBase::SharedPtr timer_;
+
+  // Publisher
+  rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr publisher_;
+
   // Image Variables
   std::vector<cv::Mat> images_;
   size_t current_image_idx_ = 0;

@@ -17,6 +17,9 @@ namespace pano_image_publisher {
     // Load the images
     this->load_images();
 
+    // Create the publisher
+    this->create_publisher();
+
     // Start the timer to publish images at the specified rate
     this->start_timer();
   }
@@ -55,8 +58,38 @@ namespace pano_image_publisher {
   }
 
   void PublisherNode::publish_image() {
-    // TODO: Implement logic for publishing
     RCLCPP_INFO(this->get_logger(), "Publishing image!");
+
+    if (this->images_.empty()) {
+      RCLCPP_WARN(this->get_logger(), "No images to publish.");
+      return;
+    }
+
+    // Get the current image
+    const cv::Mat& image = this->images_[this->current_image_idx_];
+
+    // Convert cv::Mat → ROS2 Image
+    sensor_msgs::msg::Image msg =
+        utils::cv_mat_to_image_msg(image, "bgr8");
+
+    msg.header.stamp = this->now();
+    msg.header.frame_id = "camera";
+
+    // Publish the image
+    this->publisher_->publish(msg);
+
+    // Update the index for the next image
+    this->current_image_idx_++;
+    if (this->current_image_idx_ >= this->images_.size()) {
+      if (this->loop_) {
+        this->current_image_idx_ = 0; // Loop back to first image
+      } else {
+        RCLCPP_INFO(this->get_logger(), "Reached the end of the image list. Stopping publisher.");
+        this->timer_->cancel(); // Stop the timer if not looping
+      }
+    }
+  }
+
   void PublisherNode::load_images() {
     this->images_ = this->image_loader_.load_images(this->folder_path_);
     if (this->images_.empty()) {
