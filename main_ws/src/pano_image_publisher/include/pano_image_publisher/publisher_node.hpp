@@ -9,10 +9,20 @@ namespace pano_image_publisher {
 class PublisherNode : public rclcpp::Node {
 
 public:
-    PublisherNode();
+  PublisherNode();
 
 private:
-    
+  
+  // Methods
+  void declare_parameters();
+  void load_parameters();
+  
+  // Params
+  std::string folder_path_;
+  std::string topic_name_;
+  int publish_rate_in_hz_;
+  bool loop_;
+  bool shuffle_;
 };
 
 } // namespace pano_image_publisher
