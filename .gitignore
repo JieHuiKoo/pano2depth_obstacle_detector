@@ -7,3 +7,4 @@
 /main_ws/src/p2d_node/p2d_node/install
 /main_ws/src/p2d_node/p2d_node/build
 /main_ws/src/p2d_node/p2d_node/log
+*.pyc
