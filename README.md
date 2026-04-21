@@ -8,3 +8,4 @@
 4. source ~/p2d_env/bin/activate
 5. python -m colcon build
 6. source install/setup.bash
+7. sudo apt install ros-${ROS_DISTRO}-tf-transformations
