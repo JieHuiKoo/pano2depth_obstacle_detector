@@ -27,7 +27,7 @@ namespace pano_image_publisher {
   void PublisherNode::declare_parameters() {
     this->declare_parameter<std::string>("folder_path"        , "");            // Default to empty string
     this->declare_parameter<std::string>("publish_topic_name" , "pano_image");  // Default topic name
-    this->declare_parameter<int>("publish_rate_in_hz"         , 1);             // Default to 1 Hz
+    this->declare_parameter<float>("publish_rate_in_hz"         , 1.0);             // Default to 1 Hz
     this->declare_parameter<bool>("loop"                      , true);          // Default to loop images
     this->declare_parameter<bool>("shuffle"                   , false);         // Default to not shuffle the image order
   }
@@ -41,12 +41,12 @@ namespace pano_image_publisher {
 
     RCLCPP_INFO(
       this->get_logger(), 
-      "\n=== Parameters loaded ===\nfolder_path=%s\publish_topic_name=%s\npublish_rate_in_hz=%d\nloop=%s\nshuffle=%s\n========================",
+      "\n=== Parameters loaded ===\nfolder_path=%s\npublish_topic_name=%s\npublish_rate_in_hz=%f\nloop=%s\nshuffle=%s\n========================",
                 folder_path_.c_str(), publish_topic_name_.c_str(), publish_rate_in_hz_, loop_ ? "true" : "false", shuffle_ ? "true" : "false");
   }
 
   void PublisherNode::start_timer() {
-    auto period_ms = std::chrono::milliseconds(1000 / this->publish_rate_in_hz_);
+    auto period_ms = std::chrono::milliseconds(static_cast<int>(1000.0 / this->publish_rate_in_hz_));
 
     // Create a timer that calls the publish_image method at the specified rate
     this->timer_ = this->create_wall_timer(
