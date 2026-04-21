@@ -43,7 +43,10 @@ This module:
   - The absolute scale of the depth is unknown
   - Scale can drift between frames
   - We should only use angle bands, as the vertical angle of each pixel is stable
+  - This pipeline was only tested on images. More testing should be done to evaluate the behaviour when input data is video. I.e. blurring, etc
 3. To reduce memory
   - It is unlikely we need to project every single pixel from the depth image
   - Therefore, we can skip some pixels by tuning the stride parameter
+4. We should parameterise values that need to be tuned.
+  - This includes values that we will only know after we do field trials, or evaluate robot behavior.
   
