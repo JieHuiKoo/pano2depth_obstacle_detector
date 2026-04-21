@@ -4,16 +4,16 @@ p2d_node:
     stride: 2
 
     # Angular thresholds in degrees
-    ground_thresh_deg: 40.0
-    overhead_thresh_deg: 140.0
+    low_thresh_deg: 40.0
+    high_thresh_deg: 140.0
 
     # The topic to subscribe for panoramic images
     'sub_image_topic': '/pano/image_raw'
 
     # The topics to publish the point cloud
-    'pub_ground_topic': '/pointcloud/ground'
-    'pub_obstacle_topic': '/pointcloud/obstacle'
-    'pub_overhead_topic': '/pointcloud/overhead'
+    'pub_low_topic': '/pointcloud/low'
+    'pub_mid_topic': '/pointcloud/mid'
+    'pub_high_topic': '/pointcloud/high'
 
     # The model size to use for depth estimation (options: 'base', 'large', 'small')
     'model_size': 'base'

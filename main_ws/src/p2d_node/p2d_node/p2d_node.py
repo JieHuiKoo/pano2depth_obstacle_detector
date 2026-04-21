@@ -27,38 +27,38 @@ class P2DNode(Node):
         # Declare
         self.declare_parameter('scale'              , 60.0)
         self.declare_parameter('stride'             , 2)
-        self.declare_parameter('ground_thresh_deg'  , 40.0)
-        self.declare_parameter('overhead_thresh_deg', 140.0)
+        self.declare_parameter('low_thresh_deg'     , 40.0)
+        self.declare_parameter('high_thresh_deg'    , 140.0)
         self.declare_parameter('sub_image_topic'    , '/pano/image_raw')
         self.declare_parameter('model_size'         , 'base')
-        self.declare_parameter('pub_ground_topic'   , '/pano/pointcloud/ground')
-        self.declare_parameter('pub_obstacle_topic' , '/pano/pointcloud/obstacle')
-        self.declare_parameter('pub_overhead_topic' , '/pano/pointcloud/overhead')
+        self.declare_parameter('pub_low_topic'      , '/pano/pointcloud/low')
+        self.declare_parameter('pub_mid_topic'      , '/pano/pointcloud/mid')
+        self.declare_parameter('pub_high_topic'     , '/pano/pointcloud/high')
         self.declare_parameter('output_frame'       , 'base_link')
 
         # Load
         self.scale               = self.get_parameter('scale'                ).value
         self.stride              = self.get_parameter('stride'               ).value
-        self.ground_thresh_deg   = self.get_parameter('ground_thresh_deg'    ).value
-        self.overhead_thresh_deg = self.get_parameter('overhead_thresh_deg'  ).value
+        self.low_thresh_deg      = self.get_parameter('low_thresh_deg'       ).value
+        self.high_thresh_deg     = self.get_parameter('high_thresh_deg'      ).value
         self.image_topic         = self.get_parameter('sub_image_topic'      ).value
         self.model_size          = self.get_parameter('model_size'           ).value
-        self.ground_topic        = self.get_parameter('pub_ground_topic'     ).value
-        self.obstacle_topic      = self.get_parameter('pub_obstacle_topic'   ).value
-        self.overhead_topic      = self.get_parameter('pub_overhead_topic'   ).value
+        self.low_topic           = self.get_parameter('pub_low_topic'        ).value
+        self.mid_topic           = self.get_parameter('pub_mid_topic'        ).value
+        self.high_topic          = self.get_parameter('pub_high_topic'       ).value
         self.output_frame        = self.get_parameter('output_frame'         ).value
 
         # Print out all loaded parameters
         self.get_logger().info(f"Parameters loaded:")
         self.get_logger().info(f"  scale: {self.scale}")
         self.get_logger().info(f"  stride: {self.stride}")
-        self.get_logger().info(f"  ground_thresh_deg: {self.ground_thresh_deg}") 
-        self.get_logger().info(f"  overhead_thresh_deg: {self.overhead_thresh_deg}")
+        self.get_logger().info(f"  low_thresh_deg: {self.low_thresh_deg}") 
+        self.get_logger().info(f"  high_thresh_deg: {self.high_thresh_deg}")
         self.get_logger().info(f"  sub_image_topic: {self.image_topic}")
         self.get_logger().info(f"  model_size: {self.model_size}")
-        self.get_logger().info(f"  pub_ground_topic: {self.ground_topic}")
-        self.get_logger().info(f"  pub_obstacle_topic: {self.obstacle_topic}")
-        self.get_logger().info(f"  pub_overhead_topic: {self.overhead_topic}")
+        self.get_logger().info(f"  pub_low_topic: {self.low_topic}")
+        self.get_logger().info(f"  pub_mid_topic: {self.mid_topic}")
+        self.get_logger().info(f"  pub_high_topic: {self.high_topic}")
         self.get_logger().info(f"  output_frame: {self.output_frame}")
 
         # Initialise
@@ -78,9 +78,9 @@ class P2DNode(Node):
             10
         )
 
-        self.pc_ground_pub      = self.create_publisher(PointCloud2, self.ground_topic        , 10)
-        self.pc_obs_pub         = self.create_publisher(PointCloud2, self.obstacle_topic      , 10)
-        self.pc_overhead_pub    = self.create_publisher(PointCloud2, self.overhead_topic      , 10)
+        self.pc_low_pub      = self.create_publisher(PointCloud2, self.low_topic      , 10)
+        self.pc_mid_pub      = self.create_publisher(PointCloud2, self.mid_topic      , 10)
+        self.pc_high_pub     = self.create_publisher(PointCloud2, self.high_topic     , 10)
 
         # ================================
 
@@ -156,25 +156,25 @@ class P2DNode(Node):
         depth = 1.0 / (disp_np + 1e-6)  # Avoid division by zero
 
         # Convert to pointcloud
-        points_ground, points_obstacle, points_overhead, fields = self.depth_to_pointcloud(
+        points_low, points_mid, points_high, fields = self.depth_to_pointcloud(
             depth,
             cv_img,
             stride=self.stride,
             scale=self.scale,
-            ground_thresh_deg=self.ground_thresh_deg,
-            overhead_thresh_deg=self.overhead_thresh_deg,
+            low_thresh_deg=self.low_thresh_deg,
+            high_thresh_deg=self.high_thresh_deg,
             should_transform=self.should_transform,
         )
 
         # Create PointCloud2
-        pc_ground_msg = point_cloud2.create_cloud(msg.header, fields, points_ground)
-        pc_obstacle_msg = point_cloud2.create_cloud(msg.header, fields, points_obstacle)
-        pc_overhead_msg = point_cloud2.create_cloud(msg.header, fields, points_overhead)
+        pc_low_msg = point_cloud2.create_cloud(msg.header, fields, points_low)
+        pc_mid_msg = point_cloud2.create_cloud(msg.header, fields, points_mid)
+        pc_high_msg = point_cloud2.create_cloud(msg.header, fields, points_high)
 
         # Publish
-        self.pc_ground_pub.publish(pc_ground_msg)
-        self.pc_obs_pub.publish(pc_obstacle_msg)
-        self.pc_overhead_pub.publish(pc_overhead_msg)
+        self.pc_low_pub.publish(pc_low_msg)
+        self.pc_mid_pub.publish(pc_mid_msg)
+        self.pc_high_pub.publish(pc_high_msg)
         self.get_logger().info("Published pointclouds")
 
     def transform_cloud(self, Xf, Yf, Zf):
@@ -216,8 +216,8 @@ class P2DNode(Node):
         rgb=None, 
         stride=2, 
         scale=60.0,
-        ground_thresh_deg=40.0,
-        overhead_thresh_deg=140.0,
+        low_thresh_deg=40.0,
+        high_thresh_deg=140.0,
         should_transform=False,
         ):
         # --- Downsample depth (and rgb) BEFORE computing angles ---
@@ -247,12 +247,12 @@ class P2DNode(Node):
 
         # --- Classification thresholds ---
         # Convert degrees to radians
-        ground_thresh   = np.deg2rad(40)     # downward
-        overhead_thresh = np.deg2rad(140)    # upward
+        low_thresh   = np.deg2rad(40)     # downward
+        high_thresh = np.deg2rad(140)    # upward
 
-        ground_mask   = Theta_f < ground_thresh
-        overhead_mask = Theta_f > overhead_thresh
-        obstacle_mask = ~(ground_mask | overhead_mask)
+        low_mask   = Theta_f < low_thresh
+        high_mask = Theta_f > high_thresh
+        mid_mask = ~(low_mask | high_mask)
 
         # Transform the pointcloud. We transform the whole pointcloud at once
         if should_transform and self.tf_to_transform is not None:
@@ -281,9 +281,9 @@ class P2DNode(Node):
                 pts['rgb'] = rgb_uint32[mask]
                 return pts
 
-            ground_pts   = make_structured(ground_mask)
-            obstacle_pts = make_structured(obstacle_mask)
-            overhead_pts = make_structured(overhead_mask)
+            low_pts   = make_structured(low_mask)
+            mid_pts = make_structured(mid_mask)
+            high_pts = make_structured(high_mask)
 
             fields = [
                 PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
@@ -297,9 +297,9 @@ class P2DNode(Node):
             def make_xyz(mask):
                 return np.column_stack((Xf[mask], Yf[mask], Zf[mask])).astype(np.float32)
 
-            ground_pts   = make_xyz(ground_mask)
-            obstacle_pts = make_xyz(obstacle_mask)
-            overhead_pts = make_xyz(overhead_mask)
+            low_pts   = make_xyz(low_mask)
+            mid_pts = make_xyz(mid_mask)
+            high_pts = make_xyz(high_mask)
 
             fields = [
                 PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
@@ -307,7 +307,7 @@ class P2DNode(Node):
                 PointField(name='z', offset=8, datatype=PointField.FLOAT32, count=1),
             ]
 
-        return ground_pts, obstacle_pts, overhead_pts, fields
+        return low_pts, mid_pts, high_pts, fields
 
 
 def main(args=None):
