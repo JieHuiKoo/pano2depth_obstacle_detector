@@ -6,7 +6,6 @@ setup(
     name=package_name,
     version='0.0.0',
     packages=find_packages(
-        exclude=['test'],
         include=['p2d_node', 'p2d_node.*']
     ),
     data_files=[
