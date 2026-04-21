@@ -1,0 +1,10 @@
+
+/main_ws/log
+/main_ws/build
+/main_ws/install
+/main_ws/src/DA360
+*.pth
+/main_ws/src/p2d_node/p2d_node/install
+/main_ws/src/p2d_node/p2d_node/build
+/main_ws/src/p2d_node/p2d_node/log
+*.pyc

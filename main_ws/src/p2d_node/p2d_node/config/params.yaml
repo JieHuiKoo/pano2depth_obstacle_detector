@@ -1,0 +1,22 @@
+p2d_node:
+  ros__parameters:
+    scale: 60.0
+    stride: 2
+
+    # Angular thresholds in degrees
+    ground_thresh_deg: 40.0
+    overhead_thresh_deg: 140.0
+
+    # The topic to subscribe for panoramic images
+    'sub_image_topic': '/pano/image_raw'
+
+    # The topics to publish the point cloud
+    'pub_ground_topic': '/pointcloud/ground'
+    'pub_obstacle_topic': '/pointcloud/obstacle'
+    'pub_overhead_topic': '/pointcloud/overhead'
+
+    # The model size to use for depth estimation (options: 'base', 'large', 'small')
+    'model_size': 'base'
+
+    # The frame to use for the output point cloud
+    output_frame: 'base_link'
