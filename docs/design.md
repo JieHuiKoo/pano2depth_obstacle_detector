@@ -18,7 +18,7 @@ Blind spots can be overcome by adding more sensors, but this comes at a monetary
 This module:
 1. generates a 360 pointcloud of the robot's surroundings using a panoramic RGB image
 2. Based on specified params, splits the pointcloud into:
-- near pointcloud, which can help with
+- low pointcloud, which can help with
   - Navigable area determination in all directions
   - Spotting short obstacles very close to robot
   - Enhanced perception coverage 
