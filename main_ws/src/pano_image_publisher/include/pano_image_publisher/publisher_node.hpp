@@ -27,7 +27,7 @@ private:
   
   // Params
   std::string folder_path_;
-  std::string topic_name_;
+  std::string publish_topic_name_;
   int publish_rate_in_hz_;
   bool loop_;
   bool shuffle_;

@@ -17,7 +17,7 @@ def generate_launch_description():
             parameters=[
                 {
                     'folder_path': data_path,
-                    'topic_name': 'pano_image',
+                    'publish_topic_name': '/pano/image_raw',
                     'publish_rate_in_hz': 1,
                     'loop': True,
                 }
