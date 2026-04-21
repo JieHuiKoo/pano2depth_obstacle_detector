@@ -14,6 +14,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/launch', ['launch/p2d_node.launch.py']),
+        ('share/' + package_name + '/launch', ['launch/static_tf.launch.py']),
         ('share/' + package_name + '/models', ['models/DA360_base.pth', 'models/DA360_large.pth', 'models/DA360_small.pth']),
     ],
     install_requires=['setuptools'],
