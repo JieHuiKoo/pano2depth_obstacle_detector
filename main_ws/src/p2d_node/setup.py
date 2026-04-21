@@ -6,7 +6,6 @@ setup(
     name=package_name,
     version='0.0.0',
     packages=find_packages(
-        exclude=['test'],
         include=['p2d_node', 'p2d_node.*']
     ),
     data_files=[
@@ -15,6 +14,8 @@ setup(
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/launch', ['launch/p2d_node.launch.py']),
         ('share/' + package_name + '/launch', ['launch/static_tf.launch.py']),
+        ('share/' + package_name + '/launch', ['launch/p2d_obs_dtctr_pipeline.launch.py']),
+        ('share/' + package_name + '/visualisation', ['visualisation/pointcloud_visualisation.rviz']),
         ('share/' + package_name + '/models', ['models/DA360_base.pth', 'models/DA360_large.pth', 'models/DA360_small.pth']),
     ],
     install_requires=['setuptools'],
