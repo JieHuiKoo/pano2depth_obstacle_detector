@@ -29,7 +29,7 @@ This module:
   - Features for SLAM (indoors)
 3. Transforms the pointcloud frame into a specified frame in params
 ## ROS 2 Integration Design
-![alt text](image.png)
+![alt text](images/p2d_archi.png)
 1. python is used for the p2d_node as the libraries and setup dependencies for pytorch is more mature
 2. Establishing a tf_static is very important, as sector based signal generation must be in base_link frame
   - This also goes for estimating distance of obstacles from robot. We need to calculate the distance in base_link frame
