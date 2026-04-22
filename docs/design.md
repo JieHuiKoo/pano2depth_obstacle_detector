@@ -33,6 +33,8 @@ This module:
 1. python is used for the p2d_node as the libraries and setup dependencies for pytorch is more mature
 2. Establishing a tf_static is very important, as sector based signal generation must be in base_link frame
   - This also goes for estimating distance of obstacles from robot. We need to calculate the distance in base_link frame
+3. We perform pointcloud truncation to low, mid, high in p2d_node while we are projecting the pointcloud. This will reduce the size of the message for downstream pipelines.
+  - Since we are projecting from depth image to pointcloud pixel by pixel, we can truncate the pointcloud inside this node, instead of spinning up another node just to do truncation. This reduces overhead.
 
 ## Deployment Considerations
 1. Avoid publishing full projected pointcloud
