@@ -5,13 +5,21 @@ CPU: Intel Core Ultra 9 185H
 
 ![alt text](images/p2d_node_benchmark.png)
 
-Inference was the main bottleneck. The DA360 model ran using pytorch cpu.
+Inference was the main bottleneck. The DA360 model (base) ran using pytorch cpu.
 
 In the interest of time, additional configuration was not performed to use cuda.
 
 Usually, rostopic hz would be executed to benchmark the latency. However, the panoramic images were being published at 0.1hz, and therefore performing benchmarking based off rostopic hz may not be the most accurate.
 
 Other tools that can be used to benchmark include flamegraphs and valgrind.
+
+It is good to run the benchmark using base model first so that we know the baseline.
+
+Afterward, we can then run other variants like small or large to compare the changes in metrics.
+
+Some metrics include:
+1. Latency
+2. Consistency in scale of pointcloud (for example, is the biggest plane in the pointcloud consistently roughly the same height?)
 
 ## Qualitative results
 ![alt text](images/pcl_low_1.png)
